@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
+import ContactModal from '../sections/ContactModal';
 
 interface ProjectImage {
   id: number;
@@ -69,12 +70,12 @@ const NewProjectModal: React.FC<NewProjectModalProps> = ({
             exit={{ x: '-100%' }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Информационная часть - на мобильных вверху, на десктопе слева (35%) */}
-            <div className="w-full md:w-[35%] bg-card/95 backdrop-blur-lg p-6 md:p-8 lg:p-12 flex flex-col md:h-full border-b md:border-b-0 md:border-r border-border/30 relative">
+            {/* Информационная часть - на мобильных вверху, на десктопе слева (40%) */}
+            <div className="w-full md:w-[40%] bg-card/95 backdrop-blur-lg flex flex-col md:h-full border-b md:border-b-0 md:border-r border-border/30 relative overflow-y-auto">
               {/* Кнопка закрытия */}
               <button
                 onClick={onClose}
-                className="absolute top-4 md:top-6 right-4 md:left-6 md:right-auto z-50 w-10 h-10 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-full text-foreground hover:text-accent transition-colors border border-border/50"
+                className="sticky top-4 left-4 z-50 w-10 h-10 flex items-center justify-center bg-background/50 backdrop-blur-sm rounded-full text-foreground hover:text-accent transition-colors border border-border/50"
                 aria-label="Закрыть"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -84,47 +85,82 @@ const NewProjectModal: React.FC<NewProjectModalProps> = ({
               </button>
 
               {/* Декоративные элементы */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-secondary"></div>
-              <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent/5 rounded-full filter blur-3xl"></div>
-              <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-secondary/5 rounded-full filter blur-3xl"></div>
+              <div className="sticky top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-secondary"></div>
 
-              <div className="pt-16 md:pt-20 flex-grow">
+              <div className="p-6 md:p-8">
                 <motion.span
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                   className="inline-block py-1 px-3 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4"
                 >
-                  Проект
+                  {title}
                 </motion.span>
 
-                <motion.h2
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                  className="text-2xl md:text-3xl lg:text-4xl font-bold font-display mb-4 md:mb-6 font-[PobedaRegular]"
-                >
-                  {title}
-                </motion.h2>
+                <div className="space-y-6">
+                  {/* Описание проекта */}
+                  {description.split('\n\n').map((block, index) => {
+                    if (block.startsWith('Описание кейса:')) {
+                      return (
+                        <div key={index} className="bg-card/30 rounded-lg p-4 border border-border/50">
+                          <h4 className="font-bold text-lg mb-2 text-accent">О проекте</h4>
+                          <p className="text-foreground/90">{block.replace('Описание кейса:', '').trim()}</p>
+                        </div>
+                      );
+                    }
+                    if (block.startsWith('Задача:')) {
+                      return (
+                        <div key={index} className="bg-card/30 rounded-lg p-4 border border-border/50">
+                          <h4 className="font-bold text-lg mb-2 text-accent">Задача</h4>
+                          <p className="text-foreground/90">{block.replace('Задача:', '').trim()}</p>
+                        </div>
+                      );
+                    }
+                    if (block.startsWith('Реализация:')) {
+                      return (
+                        <div key={index} className="bg-card/30 rounded-lg p-4 border border-border/50">
+                          <h4 className="font-bold text-lg mb-2 text-accent">Реализация</h4>
+                          <p className="text-foreground/90">{block.replace('Реализация:', '').trim()}</p>
+                        </div>
+                      );
+                    }
+                    if (block.startsWith('Ключевые особенности проекта:')) {
+                      return (
+                        <div key={index} className="bg-card/30 rounded-lg p-4 border border-border/50">
+                          <h4 className="font-bold text-lg mb-3 text-accent">Особенности</h4>
+                          <ul className="space-y-2">
+                            {block.split('\n').slice(1).map((feature, i) => (
+                              <li key={i} className="flex items-start gap-2 text-foreground/90">
+                                <span className="text-accent">•</span>
+                                <span>{feature.replace('•', '').trim()}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    }
+                    if (block.startsWith('Результат:')) {
+                      return (
+                        <div key={index} className="bg-card/30 rounded-lg p-4 border border-border/50">
+                          <h4 className="font-bold text-lg mb-2 text-accent">Результат</h4>
+                          <p className="text-foreground/90">{block.replace('Результат:', '').trim()}</p>
+                        </div>
+                      );
+                    }
+                    if (block.startsWith('Заключение:')) {
+                      return (
+                        <div key={index} className="bg-gradient-to-r from-accent/10 to-secondary/10 rounded-lg p-4 border border-border/50">
+                          <h4 className="font-bold text-lg mb-2 text-gradient">Итог</h4>
+                          <p className="text-foreground/90">{block.replace('Заключение:', '').trim()}</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="prose prose-sm md:prose-lg prose-invert max-w-none mb-6 md:mb-8"
-                >
-                  <p className="text-foreground/90">{description}</p>
-                </motion.div>
-              </div>
-
-              {/* Кнопка "Перейти на сайт" внизу информационной части */}
-              <div className="mt-auto mb-4 md:mb-0">
-                {projectUrl && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
-                  >
+                <div className="flex flex-col gap-4 mt-8">
+                  {projectUrl && (
                     <Button
                       href={projectUrl}
                       variant="gradient"
@@ -147,13 +183,29 @@ const NewProjectModal: React.FC<NewProjectModalProps> = ({
                         />
                       </svg>
                     </Button>
-                  </motion.div>
-                )}
+                  )}
+                  <div className="flex gap-4">
+                    <Button
+                      onClick={onClose}
+                      variant="outline"
+                      size="lg"
+                      className="w-full"
+                    >
+                      Закрыть
+                    </Button>
+                    <ContactModal 
+                      buttonText="Обсудить проект" 
+                      buttonVariant="primary" 
+                      buttonSize="lg"
+                      buttonClassName="w-full" 
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Галерея изображений - на мобильных внизу, на десктопе справа (65%) */}
-            <div className="w-full md:w-[65%] flex-grow overflow-y-auto bg-black/90">
+            {/* Галерея изображений - на мобильных внизу, на десктопе справа (60%) */}
+            <div className="w-full md:w-[60%] flex-grow overflow-y-auto bg-black/90">
               <div className="w-full">
                 {images.map((image, index) => (
                   <motion.div
@@ -169,7 +221,7 @@ const NewProjectModal: React.FC<NewProjectModalProps> = ({
                         alt={image.alt}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 65vw"
+                        sizes="(max-width: 768px) 100vw, 60vw"
                       />
                     </div>
                   </motion.div>

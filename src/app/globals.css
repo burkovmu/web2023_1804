@@ -1,3 +1,6 @@
+/* Импорт шрифта Lato с Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+
 @import "tailwindcss";
 
 :root {
@@ -10,7 +13,7 @@
   --card: #171717;
   --card-foreground: #f5f5f5;
   
-  --font-sans: 'Azbuka06', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-sans: 'ofont.ru_Bounded', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: var(--font-space-grotesk), monospace;
   --font-display: 'PobedaRegular', sans-serif;
   
@@ -334,9 +337,8 @@ section {
 }
 
 @font-face {
-  font-family: 'Azbuka06';
-  src: url('/fonts/azbuka06.woff2') format('woff2'),
-       url('/fonts/azbuka06.ttf') format('truetype');
+  font-family: 'ofont.ru_Bounded';
+  src: url('/fonts/ofont.ru_Bounded.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;

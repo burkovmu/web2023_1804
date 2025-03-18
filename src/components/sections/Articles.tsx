@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import ArticleModal from '../ui/ArticleModal';
 import { articlesData } from '../data/articlesData';
@@ -9,35 +9,11 @@ import { articlesData } from '../data/articlesData';
 const Articles = () => {
   const [hoveredArticle, setHoveredArticle] = useState<number | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<number | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+  const controls = useAnimation();
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Анимация для контейнера
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  // Анимация для статьи
-  const articleVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    },
-  };
-
-  const handleArticleClick = (id: number, e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleArticleClick = (id: number) => {
     setSelectedArticle(id);
   };
 
@@ -50,203 +26,238 @@ const Articles = () => {
     return articlesData.find(article => article.id === selectedArticle) || null;
   };
 
-  // Получаем основную статью (первая в списке)
-  const featuredArticle = articlesData[0];
-  // Остальные статьи
-  const regularArticles = articlesData.slice(1);
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -340, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 340, behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const sectionTop = sectionRef.current.getBoundingClientRect().top;
+      const windowHeight = window.innerHeight;
+      if (sectionTop < windowHeight * 0.75) {
+        controls.start('visible');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [controls]);
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const articleVariants = {
+    hidden: { opacity: 0, x: 20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.22, 1, 0.36, 1]
+      }
+    }
+  };
 
   return (
     <section 
-      id="articles" 
       ref={sectionRef}
       className="py-24 md:py-32 bg-background relative overflow-hidden"
+      id="articles"
     >
       {/* Декоративные элементы */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
-      <div className="absolute top-1/3 right-0 w-64 h-64 bg-accent/5 rounded-full filter blur-3xl"></div>
-      <div className="absolute bottom-1/3 left-0 w-64 h-64 bg-secondary/5 rounded-full filter blur-3xl"></div>
-
-      {/* Фоновая сетка */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#8882_1px,transparent_1px),linear-gradient(to_bottom,#8882_1px,transparent_1px)] bg-[size:14px_24px] opacity-10"></div>
-
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-16">
-          <motion.span
-            initial={{ opacity: 0, y: -10 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="inline-block py-1 px-3 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4"
-          >
-            Блог
-          </motion.span>
-          <motion.h2 
-            initial={{ opacity: 0, y: -20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="text-3xl md:text-5xl font-bold font-display tracking-tight mb-6 font-[PobedaRegular]"
-          >
-            Полезные <span className="text-gradient">статьи</span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-foreground/80 max-w-2xl mx-auto font-light"
-          >
-            Делимся экспертными знаниями и полезными советами для тех, кто хочет создать эффективный и современный сайт
-          </motion.p>
-        </div>
-
-        <div className="space-y-10">
-          {/* Главная статья - полная ширина */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-          >
-            <motion.article 
-              variants={articleVariants}
-              className="group"
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent opacity-30"></div>
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border to-transparent opacity-30"></div>
+      
+      {/* Фоновые элементы с анимациями */}
+      <motion.div
+        className="absolute top-1/4 right-0 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-accent/20 to-primary/20 mix-blend-multiply filter blur-3xl opacity-30"
+        initial={{ x: 100, opacity: 0 }}
+        animate={{ 
+          x: 0, 
+          opacity: 0.3,
+          transition: { duration: 1.5 }
+        }}
+      />
+      
+      <motion.div
+        className="absolute bottom-1/4 left-0 w-[400px] h-[400px] rounded-full bg-gradient-to-r from-accent/10 to-secondary/10 mix-blend-multiply filter blur-3xl opacity-20"
+        animate={{
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="flex items-center justify-between mb-12">
+          <div>
+            <div className="inline-block px-3 py-1 bg-accent/10 text-accent text-sm rounded-full mb-4">
+              Блог
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold font-display tracking-tight mb-4 font-[PobedaRegular]">
+              Полезные <span className="text-gradient">статьи</span>
+            </h2>
+            <p className="text-foreground/80 max-w-2xl font-light">
+              Делимся экспертными знаниями и советами по созданию современных веб-сайтов
+            </p>
+          </div>
+          <div className="hidden md:flex items-center gap-4">
+            <button 
+              onClick={scrollLeft}
+              className="p-3 rounded-full bg-background border border-border/30 shadow-lg hover:bg-accent/10 transition-all duration-300 hover:scale-105"
             >
-              <a 
-                href={`#article-${featuredArticle.slug}`}
-                onClick={(e) => handleArticleClick(featuredArticle.id, e)}
-                className="grid md:grid-cols-5 gap-6 bg-card/40 backdrop-blur-sm rounded-2xl overflow-hidden border border-border hover:shadow-xl transition-all duration-300"
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
               >
-                <div className="md:col-span-3 relative h-80 md:h-auto overflow-hidden">
-                  <Image
-                    src={featuredArticle.image}
-                    alt={featuredArticle.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent md:bg-gradient-to-r"></div>
-                  <div className="absolute top-4 left-4">
-                    <span className="px-3 py-1 bg-accent/90 text-white text-xs rounded-full backdrop-blur-sm">
-                      {featuredArticle.category}
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="md:col-span-2 p-6 md:py-8 flex flex-col justify-center">
-                  <div className="flex items-center text-sm text-foreground/60 mb-3">
-                    <span>{featuredArticle.date}</span>
-                    <span className="mx-2">•</span>
-                    <span>{featuredArticle.readTime} чтения</span>
-                  </div>
-                  
-                  <h3 className="text-2xl md:text-3xl font-bold mb-4 group-hover:text-accent transition-colors duration-300">
-                    {featuredArticle.title}
-                  </h3>
-                  
-                  <p className="text-foreground/70 mb-6 line-clamp-3 md:line-clamp-4">
-                    {featuredArticle.content.intro}
-                  </p>
-                  
-                  <div className="mt-auto flex items-center text-accent font-medium">
-                    <span>Читать статью</span>
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      width="18" 
-                      height="18" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round"
-                      className="ml-2 transition-transform duration-300 group-hover:translate-x-1"
-                    >
-                      <path d="M5 12h14"></path>
-                      <path d="m12 5 7 7-7 7"></path>
-                    </svg>
-                  </div>
-                </div>
-              </a>
-            </motion.article>
-          </motion.div>
-
-          {/* Сетка остальных статей */}
-          <motion.div 
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <button 
+              onClick={scrollRight}
+              className="p-3 rounded-full bg-background border border-border/30 shadow-lg hover:bg-accent/10 transition-all duration-300 hover:scale-105"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div className="relative">
+          <motion.div
+            ref={scrollContainerRef}
             variants={containerVariants}
             initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            animate={controls}
+            className="flex overflow-x-auto scrollbar-hide gap-8 pb-8 -mx-4 px-4 snap-x snap-mandatory"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
           >
-            {regularArticles.map((article) => (
-              <motion.article 
+            {articlesData.map((article) => (
+              <motion.div
                 key={article.id}
                 variants={articleVariants}
-                className="bg-card/40 backdrop-blur-sm rounded-xl overflow-hidden border border-border group hover:shadow-lg transition-all duration-300 flex flex-col"
+                className="cursor-pointer group flex-none w-[400px] snap-start first:ml-0 last:mr-0"
                 onMouseEnter={() => setHoveredArticle(article.id)}
                 onMouseLeave={() => setHoveredArticle(null)}
+                onClick={() => handleArticleClick(article.id)}
               >
-                <a 
-                  href={`#article-${article.slug}`}
-                  onClick={(e) => handleArticleClick(article.id, e)}
-                  className="flex flex-col h-full"
-                >
-                  <div className="relative h-48 overflow-hidden">
+                <div className="relative rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-500 h-[500px]">
+                  <div className="absolute inset-0">
                     <Image
                       src={article.image}
                       alt={article.title}
                       fill
-                      className={`object-cover transition-transform duration-500 ${
-                        hoveredArticle === article.id ? 'scale-105' : 'scale-100'
-                      }`}
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent"></div>
-                    <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-accent/90 text-white text-xs rounded-full">
-                        {article.category}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+                  </div>
+                  <div className="relative h-full flex flex-col justify-end p-6 z-10">
+                    <span className="inline-block px-3 py-1 bg-accent/90 text-white text-xs rounded-full mb-4 self-start">
+                      {article.category}
+                    </span>
+                    <h3 className="text-xl font-semibold mb-3 text-white group-hover:text-accent transition-colors duration-300">
+                      {article.title}
+                    </h3>
+                    <p className="text-sm text-white/90 mb-4 line-clamp-2">
+                      {article.content.intro}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-white/80">
+                      <span>{article.date}</span>
+                      <span className="bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                        {article.readTime}
                       </span>
                     </div>
                   </div>
-                  
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="flex items-center text-sm text-foreground/60 mb-3">
-                      <span>{article.date}</span>
-                      <span className="mx-2">•</span>
-                      <span>{article.readTime} чтения</span>
-                    </div>
-                    
-                    <h3 className="text-xl font-bold mb-3 group-hover:text-accent transition-colors duration-300">
-                      {article.title}
-                    </h3>
-                    
-                    <p className="text-foreground/70 text-sm mb-4 line-clamp-3 flex-grow">
-                      {article.content.intro}
-                    </p>
-                    
-                    <div className="mt-auto flex items-center text-accent font-medium">
-                      <span>Читать статью</span>
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        width="18" 
-                        height="18" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"
-                        className="ml-2 transition-transform duration-300 group-hover:translate-x-1"
-                      >
-                        <path d="M5 12h14"></path>
-                        <path d="m12 5 7 7-7 7"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </a>
-              </motion.article>
+                </div>
+              </motion.div>
             ))}
           </motion.div>
+          
+          <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 md:hidden">
+            <button 
+              onClick={scrollLeft}
+              className="p-2 rounded-full bg-background/80 backdrop-blur-sm border border-border/30 shadow-lg hover:bg-accent/10 transition-all duration-300"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+          </div>
+          
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 md:hidden">
+            <button 
+              onClick={scrollRight}
+              className="p-2 rounded-full bg-background/80 backdrop-blur-sm border border-border/30 shadow-lg hover:bg-accent/10 transition-all duration-300"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
-
-      {/* Модальное окно для статьи */}
-      <ArticleModal 
+      
+      <ArticleModal
         isOpen={selectedArticle !== null}
         onClose={handleCloseModal}
         article={getSelectedArticle()}

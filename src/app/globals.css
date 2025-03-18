@@ -1,0 +1,343 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0f0f0f;
+  --foreground: #ffffff;
+  --accent: #ff3e00;
+  --secondary: #2563eb;
+  --muted: #737373;
+  --border: #262626;
+  --card: #171717;
+  --card-foreground: #f5f5f5;
+  
+  --font-sans: 'Azbuka06', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: var(--font-space-grotesk), monospace;
+  --font-display: 'PobedaRegular', sans-serif;
+  
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #ffffff;
+    --foreground: #0f0f0f;
+    --card: #f5f5f5;
+    --card-foreground: #171717;
+    --border: #e5e5e5;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  transition: background 0.3s ease-in-out;
+  min-height: 100%;
+  position: relative;
+  cursor: auto; /* Возвращаем обычный курсор */
+}
+
+/* Стили для шапки сайта */
+header {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 50 !important;
+}
+
+/* Стили для кнопки меню */
+header button {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.container {
+  @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+}
+
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r;
+  background-image: linear-gradient(to right, var(--accent), var(--secondary));
+}
+
+.text-gradient-white {
+  @apply bg-clip-text text-transparent bg-gradient-to-r;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.8));
+}
+
+.cursor {
+  display: none; /* Полностью отключаем кастомный курсор */
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s var(--ease-out-expo);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.marquee {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.magnetic {
+  transition: transform 0.2s var(--ease-out-expo);
+}
+
+/* Стили для секций, чтобы они имели достаточную высоту */
+section {
+  min-height: 100vh;
+  padding-top: 80px; /* Отступ для шапки */
+  padding-bottom: 40px;
+  position: relative;
+}
+
+/* Для стилизации скроллбара */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary);
+}
+
+/* Новые стили для анимаций и эффектов */
+
+/* Эффект свечения для элементов */
+.glow {
+  position: relative;
+}
+
+.glow::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(45deg, var(--accent), var(--secondary));
+  filter: blur(15px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+.glow:hover::after {
+  opacity: 0.5;
+}
+
+/* Анимация пульсации */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+.pulse {
+  animation: pulse 3s infinite ease-in-out;
+}
+
+/* Эффект размытия для фоновых элементов */
+.blur-backdrop {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Эффект стеклянной поверхности */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Анимация появления текста по буквам */
+.text-reveal {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.text-reveal span {
+  display: inline-block;
+  transform: translateY(100%);
+  opacity: 0;
+  animation: revealText 0.5s forwards;
+}
+
+@keyframes revealText {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Эффект неоновой подсветки */
+.neon {
+  text-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent), 0 0 20px var(--accent);
+  transition: text-shadow 0.3s ease;
+}
+
+.neon:hover {
+  text-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent), 0 0 20px var(--accent), 0 0 40px var(--accent);
+}
+
+/* Эффект волны */
+@keyframes wave {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.wave {
+  animation: wave 3s infinite ease-in-out;
+}
+
+/* Стили для мобильных устройств */
+@media (max-width: 768px) {
+  body {
+    cursor: auto; /* Возвращаем стандартный курсор на мобильных устройствах */
+  }
+  
+  .cursor {
+    display: none; /* Скрываем кастомный курсор на мобильных устройствах */
+  }
+}
+
+/* Исправление для центрирования контента */
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Скрытие скроллбара для WebKit браузеров */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE и Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+@font-face {
+  font-family: 'BeerMoney';
+  src: url('/fonts/beer_money.woff2') format('woff2'),
+       url('/fonts/beer_money.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SKPorsche';
+  src: url('/fonts/sk_porsche.woff2') format('woff2'),
+       url('/fonts/sk_porsche.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NFSMW';
+  src: url('/fonts/nfs_mw.woff2') format('woff2'),
+       url('/fonts/nfs_mw.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SpriteGraffitiShadow';
+  src: url('/fonts/spritegraffitishadow.woff2') format('woff2'),
+       url('/fonts/spritegraffitishadow.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PobedaRegular';
+  src: url('/fonts/pobeda_regular.woff2') format('woff2'),
+       url('/fonts/pobeda_regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Azbuka06';
+  src: url('/fonts/azbuka06.woff2') format('woff2'),
+       url('/fonts/azbuka06.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}

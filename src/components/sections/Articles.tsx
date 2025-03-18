@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import Image from 'next/image';
 import ArticleModal from '../ui/ArticleModal';
 import { articlesData } from '../data/articlesData';
 
 const Articles = () => {
-  const [hoveredArticle, setHoveredArticle] = useState<number | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<number | null>(null);
   const controls = useAnimation();
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -177,8 +176,6 @@ const Articles = () => {
                 key={article.id}
                 variants={articleVariants}
                 className="cursor-pointer group flex-none w-[400px] snap-start first:ml-0 last:mr-0"
-                onMouseEnter={() => setHoveredArticle(article.id)}
-                onMouseLeave={() => setHoveredArticle(null)}
                 onClick={() => handleArticleClick(article.id)}
               >
                 <div className="relative rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-500 h-[500px]">

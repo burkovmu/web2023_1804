@@ -46,14 +46,17 @@ const Button: React.FC<ButtonProps> = ({
   
   if (href) {
     return (
-      <Link href={href} passHref>
-        <motion.a 
-          className={styles}
+      <Link 
+        href={href} 
+        className={styles}
+        onClick={onClick}
+      >
+        <motion.span
           {...buttonMotion}
-          onClick={onClick}
+          className="flex items-center justify-center w-full h-full"
         >
           {children}
-        </motion.a>
+        </motion.span>
       </Link>
     );
   }

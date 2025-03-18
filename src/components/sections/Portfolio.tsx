@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import ContactModal from './ContactModal';
 import Button from '@/components/ui/Button';
+import NewProjectModal from '@/components/ui/NewProjectModal';
 
 // Определение типов для проекта
 interface Project {
@@ -16,6 +17,12 @@ interface Project {
   category: string;
   tags: string[];
   features: string[];
+  projectUrl?: string;
+  galleryImages?: {
+    id: number;
+    src: string;
+    alt: string;
+  }[];
 }
 
 // Типы для пропсов компонентов
@@ -242,6 +249,39 @@ const projects: Project[] = [
       'Интерактивная галерея проектов',
       'Анимированные переходы',
       'Оптимизированная производительность'
+    ],
+    projectUrl: 'https://example.com/modern',
+    galleryImages: [
+      {
+        id: 1,
+        src: '/images/portfolio/modern.jpg',
+        alt: 'Главная страница сайта'
+      },
+      {
+        id: 2,
+        src: '/images/portfolio/modern.jpg',
+        alt: 'О компании'
+      },
+      {
+        id: 3,
+        src: '/images/portfolio/modern.jpg',
+        alt: 'Портфолио'
+      },
+      {
+        id: 4,
+        src: '/images/portfolio/modern.jpg',
+        alt: 'Контакты'
+      },
+      {
+        id: 5,
+        src: '/images/portfolio/modern.jpg',
+        alt: 'Услуги'
+      },
+      {
+        id: 6,
+        src: '/images/portfolio/modern.jpg',
+        alt: 'Блог'
+      }
     ]
   },
   {
@@ -257,6 +297,39 @@ const projects: Project[] = [
       'Виртуальная примерка',
       'Интеграция с платежными системами',
       'Административная панель'
+    ],
+    projectUrl: 'https://example.com/aurum',
+    galleryImages: [
+      {
+        id: 1,
+        src: '/images/portfolio/aurum.jpg',
+        alt: 'Главная страница магазина'
+      },
+      {
+        id: 2,
+        src: '/images/portfolio/aurum.jpg',
+        alt: 'Каталог товаров'
+      },
+      {
+        id: 3,
+        src: '/images/portfolio/aurum.jpg',
+        alt: 'Страница товара'
+      },
+      {
+        id: 4,
+        src: '/images/portfolio/aurum.jpg',
+        alt: 'Корзина'
+      },
+      {
+        id: 5,
+        src: '/images/portfolio/aurum.jpg',
+        alt: 'Оформление заказа'
+      },
+      {
+        id: 6,
+        src: '/images/portfolio/aurum.jpg',
+        alt: 'Личный кабинет'
+      }
     ]
   },
   {
@@ -272,6 +345,39 @@ const projects: Project[] = [
       'Онлайн-бронирование билетов',
       'Стриминг выступлений',
       'Интеграция соцсетей'
+    ],
+    projectUrl: 'https://example.com/festival',
+    galleryImages: [
+      {
+        id: 1,
+        src: '/images/portfolio/festival.jpg',
+        alt: 'Главная страница фестиваля'
+      },
+      {
+        id: 2,
+        src: '/images/portfolio/festival.jpg',
+        alt: 'Программа мероприятий'
+      },
+      {
+        id: 3,
+        src: '/images/portfolio/festival.jpg',
+        alt: 'Билеты'
+      },
+      {
+        id: 4,
+        src: '/images/portfolio/festival.jpg',
+        alt: 'Участники'
+      },
+      {
+        id: 5,
+        src: '/images/portfolio/festival.jpg',
+        alt: 'Галерея'
+      },
+      {
+        id: 6,
+        src: '/images/portfolio/festival.jpg',
+        alt: 'Контакты'
+      }
     ]
   },
   {
@@ -287,6 +393,39 @@ const projects: Project[] = [
       'Интерактивные графики',
       'API интеграция',
       'Масштабируемая архитектура'
+    ],
+    projectUrl: 'https://example.com/greentech',
+    galleryImages: [
+      {
+        id: 1,
+        src: '/images/portfolio/greentech.jpg',
+        alt: 'Главная страница платформы'
+      },
+      {
+        id: 2,
+        src: '/images/portfolio/greentech.jpg',
+        alt: 'Дашборд'
+      },
+      {
+        id: 3,
+        src: '/images/portfolio/greentech.jpg',
+        alt: 'Аналитика'
+      },
+      {
+        id: 4,
+        src: '/images/portfolio/greentech.jpg',
+        alt: 'Интеграции'
+      },
+      {
+        id: 5,
+        src: '/images/portfolio/greentech.jpg',
+        alt: 'Настройки'
+      },
+      {
+        id: 6,
+        src: '/images/portfolio/greentech.jpg',
+        alt: 'Профиль'
+      }
     ]
   }
 ];
@@ -364,9 +503,13 @@ const Portfolio = () => {
         {/* Модальное окно с деталями проекта */}
         <AnimatePresence>
           {selectedProject !== null && selectedProjectData && (
-            <ProjectModal 
-              project={selectedProjectData} 
-              onClose={() => setSelectedProject(null)} 
+            <NewProjectModal 
+              isOpen={selectedProject !== null}
+              onClose={() => setSelectedProject(null)}
+              title={selectedProjectData.title}
+              description={selectedProjectData.description}
+              projectUrl={selectedProjectData.projectUrl}
+              images={selectedProjectData.galleryImages || []}
             />
           )}
         </AnimatePresence>

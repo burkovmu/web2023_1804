@@ -89,7 +89,7 @@ const Hero = () => {
             className="max-w-5xl mx-auto text-center"
           >
             <motion.div variants={itemVariants} className="mb-6">
-              <span className="inline-block py-1 px-3 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4 font-[Azbuka06]">
+              <span className="inline-block py-1 px-3 rounded-full bg-accent/10 text-accent text-sm font-medium mb-4 font-sans">
                 Премиальная веб-студия
               </span>
             </motion.div>
@@ -108,7 +108,7 @@ const Hero = () => {
             <motion.p 
               ref={subtitleRef}
               variants={itemVariants}
-              className="text-lg md:text-xl font-normal text-foreground/80 max-w-3xl mx-auto mb-10 font-[Azbuka06] tracking-wide"
+              className="text-lg md:text-xl font-normal text-foreground/80 max-w-3xl mx-auto mb-10 font-sans tracking-wide"
             >
               Мы разрабатываем сложные профессиональные сайты с уникальным дизайном и анимацией, выделяющие ваш бренд среди конкурентов.
             </motion.p>
@@ -116,7 +116,7 @@ const Hero = () => {
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
               <MagneticButton 
                 strength={30} 
-                className="rounded-full bg-secondary/10 backdrop-blur-sm border border-secondary/20 text-foreground hover:bg-secondary/20 transition-colors duration-300 py-3 px-6 font-[Azbuka06] tracking-wide"
+                className="rounded-full bg-secondary/10 backdrop-blur-sm border border-secondary/20 text-foreground hover:bg-secondary/20 transition-colors duration-300 py-3 px-6 font-sans tracking-wide"
               >
                 <a href="#projects" className="flex items-center gap-2">
                   <span>Смотреть проекты</span>

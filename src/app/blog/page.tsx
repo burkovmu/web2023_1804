@@ -2,7 +2,6 @@
 
 import { articlesData } from '@/components/data/articlesData';
 import ArticleModal from '@/components/ui/ArticleModal';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Image from 'next/image';
 

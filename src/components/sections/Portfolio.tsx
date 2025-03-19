@@ -49,80 +49,64 @@ const ProjectCard = memo(({ project, onClick, isHovered, onHover, onHoverEnd }: 
       style={{ 
         transform: isHovered ? 'translateY(-8px)' : 'translateY(0)',
         transition: 'transform 0.3s ease',
-        willChange: 'transform' // Подсказка браузеру для оптимизации
+        willChange: 'transform'
       }}
     >
-      <div className="relative h-[300px] md:h-[400px] overflow-hidden">
-        {/* Градиентный оверлей */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10"></div>
-        
+      <div className="relative h-[300px] md:h-[400px] p-8 flex flex-col justify-end bg-gradient-to-br from-accent/10 via-secondary/10 to-accent/5">
         {/* Фоновая анимация при наведении */}
         <div 
           className={`absolute inset-0 bg-gradient-to-r from-accent/20 to-secondary/20 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
         />
         
-        <Image
-          src={project.image}
-          alt={project.title}
-          fill
-          className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-105' : 'scale-100'}`}
-          placeholder="blur"
-          blurDataURL={project.placeholder || 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAIAAgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=='}
-          sizes="(max-width: 768px) 100vw, 50vw"
-          loading="lazy"
-        />
+        {/* Категория */}
+        <span
+          className="relative z-10 inline-block py-1 px-3 rounded-full bg-accent/20 backdrop-blur-sm text-white text-xs font-medium mb-3 w-fit"
+        >
+          {project.category}
+        </span>
         
-        <div className="absolute inset-0 z-20 p-8 flex flex-col justify-end">
-          {/* Категория */}
-          <span
-            className="inline-block py-1 px-3 rounded-full bg-accent/20 backdrop-blur-sm text-white text-xs font-medium mb-3 w-fit"
-          >
-            {project.category}
+        {/* Заголовок */}
+        <h3 
+          className="relative z-10 text-2xl md:text-3xl font-bold mb-2"
+        >
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/90">
+            {project.title}
           </span>
-          
-          {/* Заголовок */}
-          <h3 
-            className="text-2xl md:text-3xl font-bold mb-2"
-          >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-white/90">
-              {project.title}
-            </span>
-          </h3>
-          
-          {/* Описание */}
-          <p 
-            className={`text-white/90 mb-4 line-clamp-2 md:line-clamp-3 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-80'}`}
-          >
-            {project.description}
-          </p>
-          
-          {/* Теги */}
-          <div 
-            className="flex flex-wrap gap-2 mb-4"
-          >
-            {project.tags.map((tag: string) => (
-              <span 
-                key={tag} 
-                className="px-3 py-1 bg-accent/20 backdrop-blur-sm rounded-full text-xs text-white/90 border border-white/10"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-          
-          {/* Кнопка */}
-          <div
-            className={`transform transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-          >
-            <Button 
-              onClick={() => onClick(project.id)}
-              variant="gradient"
-              size="md"
-              className="w-full sm:w-auto"
+        </h3>
+        
+        {/* Описание */}
+        <p 
+          className={`relative z-10 text-white/90 mb-4 line-clamp-2 md:line-clamp-3 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-80'}`}
+        >
+          {project.description}
+        </p>
+        
+        {/* Теги */}
+        <div 
+          className="relative z-10 flex flex-wrap gap-2 mb-4"
+        >
+          {project.tags.map((tag: string) => (
+            <span 
+              key={tag} 
+              className="px-3 py-1 bg-accent/20 backdrop-blur-sm rounded-full text-xs text-white/90 border border-white/10"
             >
-              Подробнее о проекте
-            </Button>
-          </div>
+              {tag}
+            </span>
+          ))}
+        </div>
+        
+        {/* Кнопка */}
+        <div
+          className={`relative z-10 transform transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+        >
+          <Button 
+            onClick={() => onClick(project.id)}
+            variant="gradient"
+            size="md"
+            className="w-full sm:w-auto"
+          >
+            Подробнее о проекте
+          </Button>
         </div>
       </div>
     </div>
@@ -151,7 +135,7 @@ const ProjectModal = memo(({ project, onClose }: ProjectModalProps) => {
             fill
             className="object-cover"
             placeholder="blur"
-            blurDataURL={project.placeholder || 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAIAAgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=='}
+            blurDataURL={project.placeholder || 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAAIAAgDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWEREiMxUf/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=='}
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
@@ -240,8 +224,8 @@ const projects: Project[] = [
     id: 1,
     title: 'Архитектурное бюро "Модерн"',
     description: 'Минималистичный сайт с плавными переходами и параллакс-эффектами для архитектурного бюро. Уникальный дизайн, отражающий философию современной архитектуры.',
-    image: '/images/portfolio/modern.jpg',
-    placeholder: 'data:image/jpeg;base64,...', // Здесь должен быть реальный base64
+    image: '/images/portfolio/modern/1.jpg',
+    placeholder: 'data:image/jpeg;base64,...',
     category: 'Архитектура',
     tags: ['React', 'Next.js', 'GSAP', 'Framer Motion'],
     features: [
@@ -254,33 +238,28 @@ const projects: Project[] = [
     galleryImages: [
       {
         id: 1,
-        src: '/images/portfolio/modern.jpg',
+        src: '/images/portfolio/modern/1.jpg',
         alt: 'Главная страница сайта'
       },
       {
         id: 2,
-        src: '/images/portfolio/modern.jpg',
+        src: '/images/portfolio/modern/2.jpg',
         alt: 'О компании'
       },
       {
         id: 3,
-        src: '/images/portfolio/modern.jpg',
+        src: '/images/portfolio/modern/3.jpg',
         alt: 'Портфолио'
       },
       {
         id: 4,
-        src: '/images/portfolio/modern.jpg',
+        src: '/images/portfolio/modern/4.jpg',
         alt: 'Контакты'
       },
       {
         id: 5,
-        src: '/images/portfolio/modern.jpg',
+        src: '/images/portfolio/modern/5.jpg',
         alt: 'Услуги'
-      },
-      {
-        id: 6,
-        src: '/images/portfolio/modern.jpg',
-        alt: 'Блог'
       }
     ]
   },
@@ -310,7 +289,7 @@ const projects: Project[] = [
 
 Заключение:
 Этот проект демонстрирует, как современные технологии и продуманный дизайн помогают бизнесу достигать новых высот. Сайт не только улучшил пользовательский опыт, но и значительно увеличил эффективность бизнес-процессов компании.`,
-    image: '/images/portfolio/aurum.jpg',
+    image: '/images/portfolio/aurum/1.jpg',
     placeholder: 'data:image/jpeg;base64,...',
     category: 'Аренда автомобилей',
     tags: ['React', 'Redux', 'Three.js', 'Node.js'],
@@ -325,33 +304,28 @@ const projects: Project[] = [
     galleryImages: [
       {
         id: 1,
-        src: '/images/portfolio/aurum.jpg',
-        alt: 'Главная страница магазина'
+        src: '/images/portfolio/aurum/1.jpg',
+        alt: 'Главная страница'
       },
       {
         id: 2,
-        src: '/images/portfolio/aurum.jpg',
-        alt: 'Каталог товаров'
+        src: '/images/portfolio/aurum/2.jpg',
+        alt: 'Каталог автомобилей'
       },
       {
         id: 3,
-        src: '/images/portfolio/aurum.jpg',
-        alt: 'Страница товара'
+        src: '/images/portfolio/aurum/3.jpg',
+        alt: 'Форма бронирования'
       },
       {
         id: 4,
-        src: '/images/portfolio/aurum.jpg',
-        alt: 'Корзина'
+        src: '/images/portfolio/aurum/4.jpg',
+        alt: 'Страница автомобиля'
       },
       {
         id: 5,
-        src: '/images/portfolio/aurum.jpg',
-        alt: 'Оформление заказа'
-      },
-      {
-        id: 6,
-        src: '/images/portfolio/aurum.jpg',
-        alt: 'Личный кабинет'
+        src: '/images/portfolio/aurum/5.jpg',
+        alt: 'Контакты'
       }
     ]
   },
@@ -359,7 +333,7 @@ const projects: Project[] = [
     id: 3,
     title: 'Фестиваль "Новая волна"',
     description: 'Динамичный сайт с нестандартной навигацией и анимированными переходами для музыкального фестиваля. Яркий дизайн, отражающий атмосферу мероприятия.',
-    image: '/images/portfolio/festival.jpg',
+    image: '/images/portfolio/festival/1.jpg',
     placeholder: 'data:image/jpeg;base64,...',
     category: 'Мероприятия',
     tags: ['Next.js', 'GSAP', 'WebGL', 'Firebase'],
@@ -373,33 +347,28 @@ const projects: Project[] = [
     galleryImages: [
       {
         id: 1,
-        src: '/images/portfolio/festival.jpg',
+        src: '/images/portfolio/festival/1.jpg',
         alt: 'Главная страница фестиваля'
       },
       {
         id: 2,
-        src: '/images/portfolio/festival.jpg',
+        src: '/images/portfolio/festival/2.jpg',
         alt: 'Программа мероприятий'
       },
       {
         id: 3,
-        src: '/images/portfolio/festival.jpg',
+        src: '/images/portfolio/festival/3.jpg',
         alt: 'Билеты'
       },
       {
         id: 4,
-        src: '/images/portfolio/festival.jpg',
+        src: '/images/portfolio/festival/4.jpg',
         alt: 'Участники'
       },
       {
         id: 5,
-        src: '/images/portfolio/festival.jpg',
+        src: '/images/portfolio/festival/5.jpg',
         alt: 'Галерея'
-      },
-      {
-        id: 6,
-        src: '/images/portfolio/festival.jpg',
-        alt: 'Контакты'
       }
     ]
   },
@@ -407,7 +376,7 @@ const projects: Project[] = [
     id: 4,
     title: 'Экосистема "GreenTech"',
     description: 'Интерактивная платформа с визуализацией данных и сложными анимациями для технологического стартапа. Инновационный подход к представлению информации.',
-    image: '/images/portfolio/greentech.jpg',
+    image: '/images/portfolio/greentech/1.jpg',
     placeholder: 'data:image/jpeg;base64,...',
     category: 'Технологии',
     tags: ['React', 'D3.js', 'Node.js', 'MongoDB'],
@@ -421,33 +390,28 @@ const projects: Project[] = [
     galleryImages: [
       {
         id: 1,
-        src: '/images/portfolio/greentech.jpg',
+        src: '/images/portfolio/greentech/1.jpg',
         alt: 'Главная страница платформы'
       },
       {
         id: 2,
-        src: '/images/portfolio/greentech.jpg',
+        src: '/images/portfolio/greentech/2.jpg',
         alt: 'Дашборд'
       },
       {
         id: 3,
-        src: '/images/portfolio/greentech.jpg',
+        src: '/images/portfolio/greentech/3.jpg',
         alt: 'Аналитика'
       },
       {
         id: 4,
-        src: '/images/portfolio/greentech.jpg',
+        src: '/images/portfolio/greentech/4.jpg',
         alt: 'Интеграции'
       },
       {
         id: 5,
-        src: '/images/portfolio/greentech.jpg',
+        src: '/images/portfolio/greentech/5.jpg',
         alt: 'Настройки'
-      },
-      {
-        id: 6,
-        src: '/images/portfolio/greentech.jpg',
-        alt: 'Профиль'
       }
     ]
   }

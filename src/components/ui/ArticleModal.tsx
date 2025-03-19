@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 
 export interface ArticleContent {
   id: number;
@@ -17,7 +16,6 @@ export interface ArticleContent {
     sections: {
       title: string;
       content: string;
-      image?: string;
     }[];
     conclusion: string;
   };
@@ -102,28 +100,19 @@ const ArticleModal = ({ isOpen, onClose, article }: ArticleModalProps) => {
                   </svg>
                 </button>
 
-                <div className="relative h-64 md:h-80 w-full">
-                  <Image
-                    src={article.image}
-                    alt={article.title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent"></div>
-                  <div className="absolute bottom-6 left-6 right-6">
+                <div className="p-6 md:p-8">
+                  <div className="mb-8">
                     <span className="px-3 py-1 bg-accent/90 text-white text-xs rounded-full mb-3 inline-block">
                       {article.category}
                     </span>
-                    <h1 className="text-2xl md:text-4xl font-bold text-white">{article.title}</h1>
-                    <div className="flex items-center text-sm text-white/80 mt-2">
+                    <h1 className="text-2xl md:text-4xl font-bold">{article.title}</h1>
+                    <div className="flex items-center text-sm text-foreground/80 mt-2">
                       <span>{article.date}</span>
                       <span className="mx-2">•</span>
                       <span>{article.readTime} чтения</span>
                     </div>
                   </div>
-                </div>
 
-                <div className="p-6 md:p-8">
                   <div className="prose prose-lg max-w-none">
                     <p className="text-lg font-light mb-8">{article.content.intro}</p>
                     
@@ -131,16 +120,6 @@ const ArticleModal = ({ isOpen, onClose, article }: ArticleModalProps) => {
                       <div key={index} className="mb-8">
                         <h2 className="text-2xl font-bold font-display mb-4">{section.title}</h2>
                         <p className="mb-4 font-light">{section.content}</p>
-                        {section.image && (
-                          <div className="relative h-48 md:h-64 w-full rounded-xl overflow-hidden my-6">
-                            <Image
-                              src={section.image}
-                              alt={section.title}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        )}
                       </div>
                     ))}
                     
